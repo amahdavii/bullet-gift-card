@@ -26,17 +26,20 @@ const SearchModal: FC<{ onClose: () => void }> = ({ onClose }) => {
       onClick={onClose}
     >
       <div
-        className="bg-white max-w-4xl mx-auto min-h-screen w-full px-6"
+        className="bg-white max-w-4xl mx-auto h-screen w-full px-6 flex flex-col"
         onClick={(e) => e.stopPropagation()}
       >
-        <header className="flex justify-between items-center space-x-2 py-[0.875rem]">
+        {/* Header */}
+        <header className="flex justify-between items-center py-[0.875rem] border-b border-gray-200">
           <IconButton onClick={onClose}>
             <NarrowLeft />
           </IconButton>
           <h1 className="text-[1rem] font-semibold">Search</h1>
-          <div className="w-[38px] h-[32px]">&nbsp;</div>
+          <div className="w-[38px] h-[32px]" />
         </header>
-        <div className="flex items-center w-full rounded-[0.5rem] border border-[#E3E1E2] focus-within:border-black focus-within:border-2 text-sm outline-0 relative">
+
+        {/* Search Input */}
+        <div className="flex items-center w-full rounded-[0.5rem] border border-[#E3E1E2] focus-within:border-black focus-within:border-2 text-sm outline-0 relative mt-2">
           <IconButton>
             <SearchSVG />
           </IconButton>
@@ -58,50 +61,52 @@ const SearchModal: FC<{ onClose: () => void }> = ({ onClose }) => {
           )}
         </div>
 
-        {!isLoading && data?.products.length ? (
-          <ul className="space-y-[1.65625rem] mt-[2.6875rem]">
-            {data.products.map((item) => (
-              <li key={`${item.id} ${item.cardId}`}>
-                <div
-                  className="flex cursor-pointer"
-                  onClick={() => {
-                    setSelectedProduct(item);
-                    onClose();
-                    openSelectedCard();
-                  }}
-                >
-                  <Image
-                    src={item.imagePath}
-                    width={74}
-                    height={47}
-                    alt={item.imageName}
-                  />
-                  <p className="font-semibold ml-[1rem] text-[1rem]">
-                    {item.name}
-                  </p>
-                </div>
-              </li>
-            ))}
-          </ul>
-        ) : null}
+        <div className="flex-1 overflow-y-auto mt-[1.5rem] pb-6 scrollbar-hide">
+          {!isLoading && data?.products.length ? (
+            <ul className="space-y-[1.65625rem]">
+              {data.products.map((item) => (
+                <li key={`${item.id}-${item.cardId}`}>
+                  <div
+                    className="flex cursor-pointer"
+                    onClick={() => {
+                      setSelectedProduct(item);
+                      onClose();
+                      openSelectedCard();
+                    }}
+                  >
+                    <Image
+                      src={item.imagePath}
+                      width={74}
+                      height={47}
+                      alt={item.imageName}
+                    />
+                    <p className="font-semibold ml-[1rem] text-[1rem]">
+                      {item.name}
+                    </p>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          ) : null}
 
-        {!isLoading && !data?.products.length ? (
-          <div className="flex flex-col items-center justify-center py-[2.625rem]">
-            <Image
-              src="/assets/images/not-found.png"
-              width={293}
-              height={197}
-              alt="not found image"
-            />
-            <div className="flex flex-col justify-center items-center w-[19.6875rem] space-y-[0.5rem] mt-[2.625rem]">
-              <h2 className="font-bold">Nothing Found</h2>
-              <p className="text-center">
-                You might want to try using different keywords or check for any
-                types
-              </p>
+          {!isLoading && !data?.products.length ? (
+            <div className="flex flex-col items-center justify-center py-[2.625rem]">
+              <Image
+                src="/assets/images/not-found.png"
+                width={293}
+                height={197}
+                alt="not found image"
+              />
+              <div className="flex flex-col justify-center items-center w-[19.6875rem] space-y-[0.5rem] mt-[2.625rem]">
+                <h2 className="font-bold">Nothing Found</h2>
+                <p className="text-center">
+                  You might want to try using different keywords or check for
+                  any types
+                </p>
+              </div>
             </div>
-          </div>
-        ) : null}
+          ) : null}
+        </div>
       </div>
     </div>
   );
