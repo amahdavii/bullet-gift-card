@@ -1,4 +1,4 @@
-import { FC, PropsWithChildren } from "react";
+import { FC, PropsWithChildren, Suspense } from "react";
 
 import type { Metadata } from "next";
 
@@ -25,14 +25,16 @@ const RootLayout: FC<PropsWithChildren> = ({ children }) => {
         />
       </head>
       <body className={`${avertastdFont.variable}`}>
-        <AppQueryClientProvider>
-          <ProductProvider>
-            <FormProvider>
-              {children}
-              <BottomSheetManager />
-            </FormProvider>
-          </ProductProvider>
-        </AppQueryClientProvider>
+        <Suspense fallback={<div>Loading...</div>}>
+          <AppQueryClientProvider>
+            <ProductProvider>
+              <FormProvider>
+                {children}
+                <BottomSheetManager />
+              </FormProvider>
+            </ProductProvider>
+          </AppQueryClientProvider>
+        </Suspense>
       </body>
     </html>
   );
