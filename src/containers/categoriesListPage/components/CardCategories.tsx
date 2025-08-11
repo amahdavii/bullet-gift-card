@@ -90,13 +90,13 @@ const CardCategories: FC<Props> = ({ title, items, id }) => {
         onMouseUp={onMouseUp}
         onMouseMove={onMouseMove}
       >
-        {items?.map((card, index) => (
+        {items?.map((card) => (
           <div
             onClick={() => {
               setSelectedProduct(card);
               openSelectedCard();
             }}
-            key={`${card.id} ${card.name} ${index}`}
+            key={`${card.id} ${card.name} ${card.cardId}`}
             className="min-w-[140px] cursor-pointer"
           >
             <div className="rounded-xl overflow-hidden mb-[0.5rem]  border border-[#e3e1e2]">

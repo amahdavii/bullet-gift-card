@@ -24,9 +24,9 @@ const CategoryDetailPage = ({ id }: Props) => {
     <main className="max-w-4xl mx-auto min-h-screen">
       <Header />
       <section className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-5 gap-4 py-[2.25rem] px-4">
-        {data?.data.map((card, index) => (
+        {data?.data.map((card) => (
           <div
-            key={`${card.id} ${index}`}
+            key={`${card.id} ${card.cardId}`}
             className="min-w-[140px] cursor-pointer"
             onClick={() => {
               setSelectedProduct(card);
