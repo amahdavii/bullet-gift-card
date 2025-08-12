@@ -71,7 +71,7 @@ const CategoryList: FC = () => {
         {data?.map((item) => (
           <button
             key={item.id}
-            className="flex-shrink-0 text-[#0C0A0C] rounded-[0.5rem] bg-[#F1F0F0] px-4 py-2 text-sm font-medium hover:bg-[#e5e5e5] cursor-pointer select-none"
+            className="flex-shrink-0 text-[#0C0A0C] rounded-[0.5rem] bg-[#F1F0F0] px-4 py-2 text-[0.875rem] font-medium hover:bg-[#e5e5e5] cursor-pointer select-none"
             onClick={() => changeHandler(item.id, item.name)}
           >
             {item.name}

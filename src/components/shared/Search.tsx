@@ -30,7 +30,7 @@ const SearchModal: FC<{ onClose: () => void }> = ({ onClose }) => {
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <header className="flex justify-between items-center py-[0.875rem] border-b border-gray-200">
+        <header className="flex justify-between items-center py-[0.875rem] ">
           <IconButton onClick={onClose}>
             <NarrowLeft />
           </IconButton>
