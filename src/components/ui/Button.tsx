@@ -35,11 +35,11 @@ export function Button({
             variant === "primary" && disabled,
 
           // Outline
-          "bg-white border border-black text-black hover:bg-gray-50":
+          "bg-white border border-black text-black hover:bg-gray-50 active:bg-black active:text-white":
             variant === "outline" && !disabled,
           "bg-[#F1F0F0] text-[#979698]": variant === "outline" && disabled,
         },
-        { "w-full" : fullWidth },
+        { "w-full": fullWidth },
         className
       )}
       {...props}

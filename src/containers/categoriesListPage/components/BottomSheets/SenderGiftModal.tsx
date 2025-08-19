@@ -28,8 +28,9 @@ type SendItem = "whatsapp" | "email" | "sms";
 const SenderGiftModal: FC<Props> = ({ isOpen, close }) => {
   const { push } = useRouter();
   const searchParams = useSearchParams();
-  const amount = searchParams.get("amount");
+  const amount = searchParams.get("amount") ?? 0;
   const title = searchParams.get("title");
+  const cardId = searchParams.get("cardId") ?? "";
 
   const pathname = usePathname();
   const params = useParams();
@@ -56,8 +57,19 @@ const SenderGiftModal: FC<Props> = ({ isOpen, close }) => {
       setLastName("");
       setRecieveItem("");
       setSendItem(null);
+      setMessage("");
     }
   }, [isOpen]);
+
+  useEffect(() => {
+    if (!sendItem) {
+      setRecieveItem("");
+    }
+  }, [sendItem]);
+
+  useEffect(() => {
+    setRecieveItem("");
+  }, [sendItem]);
 
   return (
     <BottomSheetModal isOpen={isOpen} onClose={close}>
@@ -161,7 +173,18 @@ const SenderGiftModal: FC<Props> = ({ isOpen, close }) => {
         <Button
           className="flex-1"
           disabled={!firstName || !sendItem || !recieveItem}
-          onClick={() => mutateAsync().then((res) => openQrCode({ code: res }))}
+          onClick={() =>
+            mutateAsync({
+              amount: Number(amount),
+              cardId: cardId,
+              receiverName:
+                firstName && lastName ? `${firstName} ${lastName}` : firstName,
+              message: message ?? "",
+              sendGateway: sendItem ?? "",
+              receiverAddress: recieveItem ?? "",
+              customerTel: "",
+            }).then((res) => openQrCode({ code: res }))
+          }
         >
           Purchase
           <ChevronRightSVG

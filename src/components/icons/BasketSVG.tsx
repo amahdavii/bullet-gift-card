@@ -4,7 +4,7 @@ interface Props {
   color?: string;
 }
 
-const BasketSVG: FC<Props> = ({ color = "#000" }) => {
+const BasketSVG: FC<Props> = ({ color = "currentColor" }) => {
   return (
     <svg
       width="19"

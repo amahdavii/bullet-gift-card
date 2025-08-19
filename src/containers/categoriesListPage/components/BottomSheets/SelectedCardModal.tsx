@@ -41,6 +41,8 @@ const SelectedCardModal: FC<Props> = ({ isOpen, close }) => {
     }
   }, [isOpen, amountParams]);
 
+  console.log("selectedProduct ==>", selectedProduct);
+
   return (
     <BottomSheetModal isOpen={isOpen} onClose={close}>
       <div className="text-center mb-[3.5rem]">
@@ -66,22 +68,24 @@ const SelectedCardModal: FC<Props> = ({ isOpen, close }) => {
       <div className="flex space-x-[0.75rem] mt-[6.625rem]">
         <Button
           onClick={() => {
-            openSenderGift({ amount, type: "gift" });
+            openSenderGift({ amount, cardId: selectedProduct?.cardId });
           }}
           variant="outline"
           className="flex-1"
           disabled={!amount}
         >
-          <GiftSVG color={amount ? "#000" : "#979698"} />
+          <GiftSVG />
           Gift
         </Button>
         <Button
-          onClick={() => openSenderInfo({ amount, type: "own" })}
-          variant="solid"
+          onClick={() =>
+            openSenderInfo({ amount, cardId: selectedProduct?.cardId })
+          }
+          variant="outline"
           className="flex-1"
           disabled={!amount}
         >
-          <BasketSVG color={amount ? "#fff" : "#979698"} />
+          <BasketSVG />
           For My Own
         </Button>
       </div>

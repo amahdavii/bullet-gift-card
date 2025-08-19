@@ -22,18 +22,22 @@ const AmountSelector: FC<Props> = ({ amount, setAmount, min, max }) => {
 
     const roundToNiceNumber = (num: number) => {
       if (max - min <= 50) {
-        // بازه کمتر مساوی 50: بر 5 تقسیم کن
         return Math.round(num / 5) * 5;
       }
-      // بازه بزرگ‌تر: بر 10 تقسیم کن
       return Math.round(num / 10) * 10;
     };
 
     stepSize = roundToNiceNumber(stepSize);
 
-    const amounts = Array.from({ length: 6 }, (_, i) => min + i * stepSize);
+    const amounts = Array.from({ length: steps }, (_, i) => min + i * stepSize);
 
-    amounts[amounts.length - 1] = max;
+    // آخرین عدد محاسبه‌شده
+    const last = amounts[amounts.length - 1];
+
+    if (last !== max) {
+      // اگه max توی لیست نبود، اضافه‌ش کن
+      amounts.push(max);
+    }
 
     return amounts;
   };
@@ -87,9 +91,9 @@ const AmountSelector: FC<Props> = ({ amount, setAmount, min, max }) => {
 
       {/* Quick select buttons */}
       <div className="grid grid-cols-3 gap-3 mt-[3.5rem]">
-        {quickAmounts.map((val) => (
+        {quickAmounts.map((val, index) => (
           <button
-            key={val}
+            key={`${val} ${index}`}
             onClick={() => selectAmount(val)}
             className={`px-4 py-2 rounded-[0.5rem] border cursor-pointer ${
               amount === val

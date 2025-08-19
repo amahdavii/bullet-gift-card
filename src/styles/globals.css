@@ -60,3 +60,9 @@ body {
   -ms-overflow-style: none; /* IE و Edge */
   scrollbar-width: none; /* Firefox */
 }
+
+input,
+textarea,
+select {
+  font-size: 16px !important;
+}

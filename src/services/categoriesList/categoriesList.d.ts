@@ -57,3 +57,13 @@ interface SearchProductsResponse {
   count: number;
   products: ProductItem[];
 }
+
+interface PostProductOrderBody {
+  cardId?: string;
+  amount?: number;
+  customerTel?: string;
+  sendGateway?: string;
+  receiverName?: string;
+  receiverAddress?: string;
+  message?: string;
+}

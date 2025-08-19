@@ -66,13 +66,13 @@ export const useGetCategoryItem = (
 
 //#region Post Category Item
 
-export const postProductOrder = () =>
-  http.post<string>("/Product/Order").then((res) => res.data);
+export const postProductOrder = (body: PostProductOrderBody) =>
+  http.post<string>("/Product/Order", body).then((res) => res.data);
 
 export const usePostProductOrder = (): UseMutationResult<
   string,
   unknown,
-  void
+  PostProductOrderBody
 > => {
   return useMutation({
     mutationFn: postProductOrder,
