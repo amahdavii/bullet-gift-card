@@ -5,7 +5,11 @@ const nextConfig: NextConfig = {
     domains: ["d13080yemosbe2.cloudfront.net"],
   },
   env: {
-    NEXT_PUBLIC_API_URL: "http://13.60.167.192/api",
+    NEXT_PUBLIC_API_URL:
+      process.env.NEXT_PUBLIC_API_URL || "http://13.60.167.192/api",
+    NEXT_PUBLIC_DASHBOARD_API_URL:
+      process.env.NEXT_PUBLIC_DASHBOARD_API_URL ||
+      "http://13.60.167.192:82/api",
   },
 };
 

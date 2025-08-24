@@ -6,14 +6,15 @@ interface BottomSheetModalProps {
   isOpen: boolean;
   onClose: () => void;
   children: React.ReactNode;
+  height?: string;
 }
 
 export default function BottomSheetModal({
   isOpen,
   onClose,
   children,
+  height,
 }: BottomSheetModalProps) {
-  // بستن با کلید Esc
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
@@ -40,6 +41,7 @@ export default function BottomSheetModal({
           transform transition-transform
           animate-slide-up md:animate-fade-in
         "
+        style={{ height }}
       >
         {children}
       </div>
