@@ -6,15 +6,23 @@ import HomeProfileSVG from "@/components/icons/HomeProfileSVG";
 import LockSVG from "@/components/icons/LockSVG";
 import TermSVG from "@/components/icons/TermSVG";
 import { useStoreLogout } from "@/services/dashboard/login";
-import { useGetOrdersStore } from "@/services/dashboard/orders";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 export default function ProfilePage() {
-  const { data } = useGetOrdersStore();
-
   const { mutateAsync } = useStoreLogout();
   const { replace } = useRouter();
+
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      setName(localStorage.getItem("name") ?? "");
+      setEmail(localStorage.getItem("email") ?? "");
+    }
+  }, []);
 
   return (
     <div>
@@ -28,12 +36,8 @@ export default function ProfilePage() {
               <HomeProfileSVG />
             </div>
             <div>
-              <h2 className="text-[#0C0A0C] font-bold">
-                {localStorage.getItem("name") ?? ""}
-              </h2>
-              <span className="text-[0.75rem] text-[#B3ADB1]">
-                {localStorage.getItem("email") ?? ""}
-              </span>
+              <h2 className="text-[#0C0A0C] font-bold">{name}</h2>
+              <span className="text-[0.75rem] text-[#B3ADB1]">{email}</span>
             </div>
           </div>
           <ul>
@@ -48,7 +52,6 @@ export default function ProfilePage() {
                     Change Password
                   </p>
                 </div>
-
                 <ChevronRightSVG color="#BAB9BA" />
               </Link>
             </li>
@@ -64,7 +67,6 @@ export default function ProfilePage() {
                     Terms & Conditions
                   </p>
                 </div>
-
                 <ChevronRightSVG color="#BAB9BA" />
               </Link>
             </li>
