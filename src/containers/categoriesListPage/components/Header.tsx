@@ -4,7 +4,7 @@ import Image from "next/image";
 const Header = () => {
   return (
     <div className="px-4">
-      <header className="flex justify-center items-center space-x-2 ">
+      <header className="flex justify-center items-center space-x-2 mb-[1rem]">
         <Image
           src="/assets/images/logo.svg"
           alt="BulletGiftCards"

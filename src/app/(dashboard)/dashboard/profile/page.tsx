@@ -1,147 +1,94 @@
 "use client";
 
-export default function HomePage() {
+import ChevronRightSVG from "@/components/icons/ChevronRightSVG";
+import ExitSVG from "@/components/icons/ExitSVG";
+import HomeProfileSVG from "@/components/icons/HomeProfileSVG";
+import LockSVG from "@/components/icons/LockSVG";
+import TermSVG from "@/components/icons/TermSVG";
+import { useStoreLogout } from "@/services/dashboard/login";
+import { useGetOrdersStore } from "@/services/dashboard/orders";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+
+export default function ProfilePage() {
+  const { data } = useGetOrdersStore();
+
+  const { mutateAsync } = useStoreLogout();
+  const { replace } = useRouter();
+
   return (
-    <div className="flex flex-col h-screen bg-gray-50">
-      {/* Scrollable Content */}
-      <div className="flex-1 overflow-y-auto p-4 pb-24">
-        {/* Sales Overview Header */}
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-lg font-semibold">Sales Overview</h2>
-          <button className="flex items-center gap-1 border rounded-lg px-3 py-1 text-sm">
-            x<span>July 24 - Aug 25</span>
-          </button>
-        </div>
+    <div>
+      <header className="bg-white flex justify-center py-[0.875rem]">
+        <h3 className="font-bold">Profile</h3>
+      </header>
+      <main className="px-[1.5rem] py-[1rem]">
+        <div className="bg-white rounded-[1rem] h-[75vh]">
+          <div className="p-[1rem] border-b border-[#E3E1E2] flex items-center gap-[1.5rem]">
+            <div className="w-[3.5rem] h-[3.5rem] bg-[#E3E1E2] rounded-full flex items-center justify-center">
+              <HomeProfileSVG />
+            </div>
+            <div>
+              <h2 className="text-[#0C0A0C] font-bold">
+                {localStorage.getItem("name") ?? ""}
+              </h2>
+              <span className="text-[0.75rem] text-[#B3ADB1]">
+                {localStorage.getItem("email") ?? ""}
+              </span>
+            </div>
+          </div>
+          <ul>
+            <li>
+              <Link
+                href="/dashboard/profile/change-password"
+                className="px-[1rem] py-[1.25rem] flex items-center justify-between"
+              >
+                <div className="flex items-center gap-[1rem]">
+                  <LockSVG />
+                  <p className="font-semibold text-[#525153]">
+                    Change Password
+                  </p>
+                </div>
 
-        {/* Stats Cards */}
-        <div className="grid grid-cols-2 gap-4 mb-6">
-          <StatCard
-            title="Total Purchase"
-            value="$1,500"
-            change="+8.2%"
-            changeColor="text-green-600"
-            desc="last 7 days"
-          />
-          <StatCard
-            title="Total Activated"
-            value="560 Cards"
-            change="+2.2%"
-            changeColor="text-green-600"
-            desc="last 7 days"
-          />
-          <StatCard
-            title="Total Scans"
-            value="560 Scans"
-            change="+5.1%"
-            changeColor="text-green-600"
-            desc="last 7 days"
-          />
-          <StatCard
-            title="Average Card Value"
-            value="$100"
-            change="-1.2%"
-            changeColor="text-red-600"
-            desc="last 7 days"
-          />
-        </div>
+                <ChevronRightSVG color="#BAB9BA" />
+              </Link>
+            </li>
 
-        {/* Top Gift Cards */}
-        <h3 className="text-lg font-semibold mb-3">Top Gift Cards</h3>
-        <div className="grid grid-cols-2 gap-4">
-          <GiftCard
-            img="https://seeklogo.com/images/U/uber-logo-2BB8EC4342-seeklogo.com.png"
-            name="Uber"
-          />
-          <GiftCard
-            img="https://cdn-icons-png.flaticon.com/512/2111/2111320.png"
-            name="Airbnb"
-          />
-          <GiftCard
-            img="https://1000logos.net/wp-content/uploads/2021/04/GAP-logo.png"
-            name="GAP"
-          />
-          <GiftCard
-            img="https://cdn.worldvectorlogo.com/logos/hulu-2.svg"
-            name="Hulu"
-          />
-          <GiftCard
-            img="https://1000logos.net/wp-content/uploads/2021/05/Under-Armour-logo.png"
-            name="Under Armour"
-          />
-          <GiftCard
-            img="https://i.ibb.co/6FvyTds/starbucks.png"
-            name="Starbucks"
-          />
-        </div>
-      </div>
+            <li>
+              <Link
+                href="/dashboard/profile/terms"
+                className="px-[1rem] py-[1.25rem] flex items-center justify-between"
+              >
+                <div className="flex items-center gap-[1rem]">
+                  <TermSVG />
+                  <p className="font-semibold text-[#525153]">
+                    Terms & Conditions
+                  </p>
+                </div>
 
-      {/* Bottom Navigation */}
-      <div className="fixed bottom-0 left-0 w-full bg-white border-t flex justify-between items-center px-8 py-3">
-        <NavItem icon={"<Home size={24} />"} label="Home" active />
-        <NavItem icon={"<ShoppingBag size={24} />"} label="Orders" />
-        <div className="relative -top-8">
-          <button className="bg-amber-400 text-white rounded-full p-4 shadow-lg">
-            x
-          </button>
+                <ChevronRightSVG color="#BAB9BA" />
+              </Link>
+            </li>
+
+            <li className="px-[1rem] py-[1.25rem]">
+              <div
+                className="flex items-center gap-[1rem] cursor-pointer"
+                onClick={() =>
+                  mutateAsync({}).then(() => {
+                    localStorage.removeItem("accessToken");
+                    localStorage.removeItem("name");
+                    localStorage.removeItem("email");
+
+                    replace("/login");
+                  })
+                }
+              >
+                <ExitSVG />
+                <p className="font-semibold text-[#C13800]">Exit</p>
+              </div>
+            </li>
+          </ul>
         </div>
-        <NavItem icon={"<User size={24} />"} label="Profile" />
-        <NavItem icon={"<Calendar size={24} />"} label="Reports" />
-      </div>
+      </main>
     </div>
-  );
-}
-
-/* -------- Components ---------- */
-function StatCard({
-  title,
-  value,
-  change,
-  changeColor,
-  desc,
-}: {
-  title: string;
-  value: string;
-  change: string;
-  changeColor: string;
-  desc: string;
-}) {
-  return (
-    <div className="bg-white p-4 rounded-xl shadow-sm">
-      <h4 className="text-sm text-gray-500">{title}</h4>
-      <p className="text-xl font-bold mt-1">{value}</p>
-      <p className={`text-xs mt-2 ${changeColor}`}>
-        {change} <span className="text-gray-500">{desc}</span>
-      </p>
-    </div>
-  );
-}
-
-function GiftCard({ img, name }: { img: string; name: string }) {
-  return (
-    <div className="bg-white rounded-xl shadow-sm flex flex-col items-center justify-center p-4">
-      <img src={img} alt={name} className="h-12 object-contain mb-2" />
-      <p className="text-sm font-medium">{name}</p>
-    </div>
-  );
-}
-
-function NavItem({
-  icon,
-  label,
-  active,
-}: {
-  icon: React.ReactNode;
-  label: string;
-  active?: boolean;
-}) {
-  return (
-    <button
-      className={`flex flex-col items-center text-xs ${
-        active ? "text-black" : "text-gray-400"
-      }`}
-    >
-      {icon}
-      <span>{label}</span>
-    </button>
   );
 }

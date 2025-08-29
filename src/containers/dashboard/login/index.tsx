@@ -10,8 +10,8 @@ export default function IntroPage() {
 
   return (
     <>
-      <div className="flex flex-col h-screen">
-        <div className="relative h-[55%] w-full">
+      <div className="flex flex-col h-screen max-w-4xl mx-auto">
+        <div className="relative h-[55vh] w-full">
           <Image
             src="/assets/images/brands.png"
             alt="brands image"
@@ -20,7 +20,7 @@ export default function IntroPage() {
           />
         </div>
 
-        <div className="h-[45%] px-[1.5rem] bg-white flex flex-col mt-[2.8125rem]">
+        <div className="h-[45vh] px-[1.5rem] bg-white flex flex-col mt-[2.8125rem]">
           <div className="flex flex-col gap-[1rem] px-[1.125rem]">
             <h2 className="text-[1.375rem] font-semibold text-center">
               Gift Cards with more <br /> than 200 brands{" "}

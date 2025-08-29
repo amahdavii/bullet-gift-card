@@ -21,7 +21,11 @@ const QRCodeBox: React.FC<QRCodeBoxProps> = ({
       }}
     >
       <div className="bg-white rounded-[8px] p-[0.875rem] flex justify-center items-center">
-        <QRCode value={value} size={133} fgColor={qrColor} />
+        <QRCode
+          value={`${process.env.NEXT_PUBLIC_URL}/dashboard/order/${value}`}
+          size={133}
+          fgColor={qrColor}
+        />
       </div>
       <p className="text-[#525153] mt-2 font-semibold">{value || ""}</p>
     </div>

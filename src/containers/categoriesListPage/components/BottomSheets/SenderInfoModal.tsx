@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/Button";
 import ClearableInput from "@/components/ui/ClearableInput";
 import TextField from "@/components/ui/TextField";
 import { useModalQuery } from "@/hooks/useModalQuery";
-import { usePostProductOrder } from "@/services/categoriesList";
+import { usePostNewProductOrder } from "@/services/categoriesList";
 import {
   useParams,
   usePathname,
@@ -35,11 +35,9 @@ const SenderInfoModal: FC<Props> = ({ isOpen, close }) => {
   const params = useParams();
   const { id } = params;
 
-  console.log(cardId);
-
   const isCategoryPage = pathname.includes("/category");
 
-  const { mutateAsync } = usePostProductOrder();
+  const { mutateAsync: mutateProduct } = usePostNewProductOrder();
 
   const { open: openQrCode } = useModalQuery({
     modalValue: "qr-code",
@@ -163,18 +161,17 @@ const SenderInfoModal: FC<Props> = ({ isOpen, close }) => {
         <Button
           className="flex-1"
           disabled={!firstName || !sendItem || !recieveItem}
-          onClick={() =>
-            mutateAsync({
+          onClick={() => {
+            mutateProduct({
               amount: Number(amount),
               cardId: cardId,
-              receiverName:
-                firstName && lastName ? `${firstName} ${lastName}` : firstName,
               message: "",
               sendGateway: sendItem ?? "",
               receiverAddress: recieveItem ?? "",
-              customerTel: "",
-            }).then((res) => openQrCode({ code: res }))
-          }
+              customerName:
+                firstName && lastName ? `${firstName} ${lastName}` : firstName,
+            }).then((res) => openQrCode({ code: res.data.bill_no }));
+          }}
         >
           Purchase
           <ChevronRightSVG

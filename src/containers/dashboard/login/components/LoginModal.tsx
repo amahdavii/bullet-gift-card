@@ -3,14 +3,44 @@ import CloseSVG from "@/components/icons/CloseSVG";
 import BottomSheetModal from "@/components/shared/BottomSheetModal";
 import { Button } from "@/components/ui/Button";
 import TextField from "@/components/ui/TextField";
+import { useStoreLogin } from "@/services/dashboard/login";
+import { useToken } from "@/hooks/useToken";
+import { useModalQuery } from "@/hooks/useModalQuery";
+import ForgetModal from "./ForgetModal";
+import { useRouter } from "next/navigation";
 
 interface Props {
   isOpen: boolean;
   close: () => void;
 }
 const LoginModal: FC<Props> = ({ isOpen, close }) => {
+  const {
+    open: openForget,
+    isOpen: isOpenForget,
+    close: closeForget,
+  } = useModalQuery({ modalValue: "forget" });
+  const { push } = useRouter();
+  const { mutateAsync } = useStoreLogin();
+  const { setToken } = useToken();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  const submitHandler = () => {
+    if (email && password) {
+      mutateAsync({
+        email,
+        password,
+      }).then((res) => {
+        setToken(res.token);
+        localStorage.setItem("email", res.user.email);
+        localStorage.setItem("name", res.user.name);
+
+        push("/dashboard");
+      });
+    } else {
+      return;
+    }
+  };
 
   return (
     <>
@@ -43,11 +73,25 @@ const LoginModal: FC<Props> = ({ isOpen, close }) => {
                 onChange={(event) => setPassword(event.target.value)}
               />
             </div>
+            <p
+              onClick={() => openForget()}
+              className="text-[#D1AE82] font-semibold text-[0.75rem] mt-[0.5rem] cursor-pointer"
+            >
+              Forget Password?
+            </p>
           </div>
 
-          <Button fullWidth>Login</Button>
+          <Button
+            fullWidth
+            disabled={!email || !password}
+            onClick={submitHandler}
+          >
+            Login
+          </Button>
         </div>
       </BottomSheetModal>
+
+      <ForgetModal isOpen={isOpenForget} close={closeForget} />
     </>
   );
 };

@@ -1,4 +1,5 @@
-import http from "../httpService";
+import { http, http2 } from "@/services/httpService";
+
 import {
   useMutation,
   UseMutationResult,
@@ -76,6 +77,19 @@ export const usePostProductOrder = (): UseMutationResult<
 > => {
   return useMutation({
     mutationFn: postProductOrder,
+  });
+};
+
+export const postNewProductOrder = (body: PostNewProductOrderBody) =>
+  http2.post<PostNewProductOrderResponse>("/orders", body).then((res) => res.data);
+
+export const usePostNewProductOrder = (): UseMutationResult<
+  PostNewProductOrderResponse,
+  unknown,
+  PostNewProductOrderBody
+> => {
+  return useMutation({
+    mutationFn: postNewProductOrder,
   });
 };
 

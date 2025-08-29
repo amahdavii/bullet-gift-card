@@ -41,8 +41,6 @@ const SelectedCardModal: FC<Props> = ({ isOpen, close }) => {
     }
   }, [isOpen, amountParams]);
 
-  console.log("selectedProduct ==>", selectedProduct);
-
   return (
     <BottomSheetModal isOpen={isOpen} onClose={close}>
       <div className="text-center mb-[3.5rem]">

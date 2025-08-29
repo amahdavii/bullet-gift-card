@@ -117,7 +117,7 @@ const Search: FC = () => {
 
   return (
     <>
-      <div className="flex items-center w-full rounded-[0.5rem] border border-[#E3E1E2] text-sm outline-0 mt-[1rem]">
+      <div className="flex items-center w-full rounded-[0.5rem] border border-[#E3E1E2] text-sm outline-0">
         <IconButton>
           <SearchSVG />
         </IconButton>

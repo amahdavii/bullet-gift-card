@@ -67,3 +67,29 @@ interface PostProductOrderBody {
   receiverAddress: string;
   message: string;
 }
+
+interface PostNewProductOrderBody {
+  customerName: string;
+  cardId: string;
+  amount: number;
+  receiverAddress: string;
+  message: string;
+  sendGateway: string;
+}
+
+interface PostNewProductOrderResponse {
+  message: string;
+  data: {
+    customer_name: string;
+    card_id: string;
+    amount: string;
+    customer_address: string;
+    message: string;
+    send_gateway: string;
+    is_paid: boolean;
+    bill_no: string;
+    UpdatedAt: string;
+    CreatedAt: string;
+    Id: number;
+  };
+}

@@ -66,3 +66,60 @@ textarea,
 select {
   font-size: 16px !important;
 }
+
+.rmdp-arrow {
+  border-color: #d1ae82 !important;
+}
+
+.rmdp-week-day {
+  color: #d1ae82;
+}
+
+.rmdp-day.rmdp-today span {
+  border: 1px solid #d1ae82 !important;
+}
+
+.rmdp-day span:hover {
+  background-color: #d1ae82 !important;
+  color: white !important;
+}
+
+.rmdp-range {
+  background-color: #d1ae82 !important;
+  color: white !important;
+  border-radius: 0px;
+  box-shadow: none !important;
+}
+
+.rmdp-day.rmdp-selected span:not(.highlight) {
+  background-color: #d1ae82 !important;
+}
+
+.rmdp-week-day {
+  color: #d1ae82 !important;
+}
+
+.rmdp-day.rmdp-today span {
+  background-color: #d1ae82 !important;
+}
+
+.custom-calendar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 400px !important; /* هر مقدار دلخواه */
+  max-width: 100%; /* جلوگیری از overflow */
+}
+
+.rmdp-wrapper {
+  background-color: transparent !important;
+}
+
+.rmdp-mobile.rmdp-wrapper {
+  border: none !important;
+}
+
+.rmdp-header-values {
+  color: #525153 !important;
+  font-weight: 600 !important;
+}
