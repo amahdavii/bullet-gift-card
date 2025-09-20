@@ -13,6 +13,11 @@ interface Props {
 
 const AmountSelector: FC<Props> = ({ amount, setAmount, min, max }) => {
   const generateQuickAmounts = (min: number, max: number) => {
+    // ✅ اگر min و max برابر باشن، فقط همون رو برگردون
+    if (min === max) {
+      return [min];
+    }
+
     if (min <= 50 && max >= 500) {
       return [50, 100, 200, 300, 400, 500];
     }
@@ -31,11 +36,8 @@ const AmountSelector: FC<Props> = ({ amount, setAmount, min, max }) => {
 
     const amounts = Array.from({ length: steps }, (_, i) => min + i * stepSize);
 
-    // آخرین عدد محاسبه‌شده
     const last = amounts[amounts.length - 1];
-
     if (last !== max) {
-      // اگه max توی لیست نبود، اضافه‌ش کن
       amounts.push(max);
     }
 
@@ -50,7 +52,7 @@ const AmountSelector: FC<Props> = ({ amount, setAmount, min, max }) => {
 
   const increase = () => {
     setAmount((prev) => {
-      if (prev < min) return min; // اگر کمتر از مین بود، پرش مستقیم روی مین
+      if (prev < min) return min;
       return Math.min(max, prev + 5);
     });
   };
@@ -62,27 +64,34 @@ const AmountSelector: FC<Props> = ({ amount, setAmount, min, max }) => {
   return (
     <div className="flex flex-col items-center gap-4 px-6">
       {/* Amount control */}
-      <div className="flex items-center gap-4">
-        <button
-          onClick={decrease}
-          disabled={amount <= min}
-          className={`bg-[#D1AE82] text-white w-8 h-8 rounded-[0.5rem] flex items-center justify-center font-bold text-lg cursor-pointer 
-      ${amount <= min ? "opacity-50 pointer-events-none" : ""}`}
-        >
-          <MinusSVG />
-        </button>
+      {min !== max && (
+        <div className="flex items-center gap-4">
+          <button
+            onClick={decrease}
+            disabled={amount <= min}
+            className={`bg-[#D1AE82] text-white w-8 h-8 rounded-[0.5rem] flex items-center justify-center font-bold text-lg cursor-pointer 
+        ${amount <= min ? "opacity-50 pointer-events-none" : ""}`}
+          >
+            <MinusSVG />
+          </button>
 
-        <div className="text-2xl font-bold">${amount.toFixed(2)}</div>
+          <div className="text-2xl font-bold">${amount.toFixed(2)}</div>
 
-        <button
-          onClick={increase}
-          disabled={amount >= max}
-          className={`bg-[#D1AE82] text-white w-8 h-8 rounded-[0.5rem] flex items-center justify-center font-bold text-lg cursor-pointer 
-      ${amount >= max ? "opacity-50 pointer-events-none" : ""}`}
-        >
-          <PlusSVG />
-        </button>
-      </div>
+          <button
+            onClick={increase}
+            disabled={amount >= max}
+            className={`bg-[#D1AE82] text-white w-8 h-8 rounded-[0.5rem] flex items-center justify-center font-bold text-lg cursor-pointer 
+        ${amount >= max ? "opacity-50 pointer-events-none" : ""}`}
+          >
+            <PlusSVG />
+          </button>
+        </div>
+      )}
+
+      {/* اگر min===max باشه فقط مقدار رو نشون بده */}
+      {min === max && (
+        <div className="text-2xl font-bold">${min.toFixed(2)}</div>
+      )}
 
       {/* Range text */}
       <p className="text-gray-500 text-[0.75rem]">

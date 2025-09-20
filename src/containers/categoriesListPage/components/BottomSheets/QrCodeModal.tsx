@@ -19,7 +19,7 @@ const QrCodeModal: FC<Props> = ({ isOpen, close }) => {
         {code ? <QRCodeGenerator value={code} /> : null}
 
         <p className="text-center">
-          Present this QR code to the shopkeeper to proceed with payment
+          Present this QR code to the cashier to complete your purchase.
         </p>
         {/* <Button variant="outline" fullWidth>
           <DownloadSVG />

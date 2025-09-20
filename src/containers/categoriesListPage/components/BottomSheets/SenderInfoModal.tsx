@@ -88,10 +88,11 @@ const SenderInfoModal: FC<Props> = ({ isOpen, close }) => {
       <div className="mt-[6.625rem] space-y-[1rem]">
         {sendItem === "whatsapp" ? (
           <ClearableInput
+            id="Whatsapp"
+            label="Whatsapp"
             inputMode="numeric"
             value={recieveItem}
             setValue={setRecieveItem}
-            setClear={setSendItem as Dispatch<SetStateAction<null>>}
           />
         ) : (
           <Button
@@ -107,10 +108,11 @@ const SenderInfoModal: FC<Props> = ({ isOpen, close }) => {
 
         {sendItem === "email" ? (
           <ClearableInput
+            id="email"
+            label="Email"
             inputMode="email"
             value={recieveItem}
             setValue={setRecieveItem}
-            setClear={setSendItem as Dispatch<SetStateAction<null>>}
           />
         ) : (
           <Button
@@ -126,10 +128,11 @@ const SenderInfoModal: FC<Props> = ({ isOpen, close }) => {
 
         {sendItem === "sms" ? (
           <ClearableInput
+            id="Sms"
+            label="Sms"
             inputMode="numeric"
             value={recieveItem}
             setValue={setRecieveItem}
-            setClear={setSendItem as Dispatch<SetStateAction<null>>}
           />
         ) : (
           <Button

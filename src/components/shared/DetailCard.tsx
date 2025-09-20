@@ -7,7 +7,7 @@ interface Props {
   amount: string;
   bill_no: string;
   customer_name: string;
-  owner: string;
+  owner?: string;
   CreatedAt: string;
   is_paid: boolean;
 }
@@ -18,7 +18,7 @@ const DetailCard: FC<Props> = ({
   amount,
   bill_no,
   customer_name,
-  owner,
+  // owner,
   CreatedAt,
   is_paid,
 }) => {
@@ -49,10 +49,10 @@ const DetailCard: FC<Props> = ({
           <dd className="text-[#B3ADB1] w-[100px] md:w-auto">{bill_no}</dd>
         </div>
 
-        <div className="flex justify-between items-center text-[0.875rem]">
+        {/* <div className="flex justify-between items-center text-[0.875rem]">
           <dt className="font-semibold text-[#0E0C0F]">Recipient Name</dt>
           <dd className="text-[#B3ADB1]">{owner}</dd>
-        </div>
+        </div> */}
 
         <div className="flex justify-between items-center text-[0.875rem]">
           <dt className="font-semibold text-[#0E0C0F]">Purchaser Name</dt>
