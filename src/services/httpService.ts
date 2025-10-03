@@ -20,7 +20,7 @@ const dashboard = axios.create({
 
 dashboard.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem("accessToken");
+    const token = localStorage.getItem("panelAccessToken");
     if (token) {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (config.headers as any).Authorization = `Bearer ${token}`;
@@ -31,6 +31,38 @@ dashboard.interceptors.request.use(
 );
 
 dashboard.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    if (error.response?.status === 401) {
+      console.warn("Unauthorized (401) → redirect to login");
+    }
+
+    return Promise.reject(error.response?.data || error);
+  }
+);
+
+const panelAdmin = axios.create({
+  baseURL: process.env.NEXT_PUBLIC_DASHBOARD_API_URL,
+  withCredentials: true,
+  headers: {
+    Accept: "application/json, text/plain, */*",
+    "Content-Type": "application/json",
+  },
+});
+
+panelAdmin.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem("panelAccessToken");
+    if (token) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (config.headers as any).Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
+
+panelAdmin.interceptors.response.use(
   (response) => response,
   async (error) => {
     if (error.response?.status === 401) {
@@ -57,4 +89,12 @@ const http2 = {
   patch: dashboard.patch,
 };
 
-export { http, http2 };
+const http3 = {
+  get: panelAdmin.get,
+  post: panelAdmin.post,
+  delete: panelAdmin.delete,
+  put: panelAdmin.put,
+  patch: panelAdmin.patch,
+};
+
+export { http, http2, http3 };

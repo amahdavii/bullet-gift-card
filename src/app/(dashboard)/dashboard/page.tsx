@@ -102,7 +102,7 @@ const DashboardHomePage: NextPage = () => {
                 amount={item.amount}
                 bill_no={item.bill_no}
                 customer_name={item.customer_name}
-                owner={item.store.owner}
+                owner={item?.store?.owner}
                 is_paid={item.is_paid}
                 CreatedAt={item.CreatedAt}
                 {...product}

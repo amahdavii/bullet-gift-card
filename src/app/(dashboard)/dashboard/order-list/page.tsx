@@ -6,7 +6,6 @@ import { useState } from "react";
 import FilterSVG from "@/components/icons/FilterSVG";
 import DashboardSearch from "@/components/shared/DashboardSearch";
 import DetailCard from "@/components/shared/DetailCard";
-import ReportCard from "@/components/shared/ReportCard";
 import { useGetOrdersStore } from "@/services/dashboard/orders";
 import useDebounce from "@/hooks/useDebounce";
 import { useModalQuery } from "@/hooks/useModalQuery";
@@ -81,7 +80,7 @@ const DashboardOrderListPage: NextPage = () => {
                 amount={item.amount}
                 bill_no={item.bill_no}
                 customer_name={item.customer_name}
-                owner={item.store.owner}
+                owner={item?.store?.owner}
                 is_paid={item.is_paid}
                 CreatedAt={item.CreatedAt}
                 {...product}
