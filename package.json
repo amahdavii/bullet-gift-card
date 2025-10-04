@@ -19,7 +19,8 @@
     "react-hot-toast": "^2.5.2",
     "react-multi-date-picker": "^4.5.2",
     "react-qr-code": "^2.0.18",
-    "react-qr-scanner": "^1.0.0-alpha.11"
+    "react-qr-scanner": "^1.0.0-alpha.11",
+    "recharts": "^3.2.1"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",

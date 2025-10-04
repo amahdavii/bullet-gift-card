@@ -1,7 +1,7 @@
-const CategoryDetailPage = ({ params }: { params: { id: string } }) => {
+const CategoryDetailPage = () => {
   return (
     <div>
-      <h2>Category Detail Page {params.id}</h2>
+      <h2>Category Detail Page</h2>
     </div>
   );
 };
