@@ -71,3 +71,63 @@ interface IStoreChangePasswordErrorResponse {
 interface IStoreLogoutResponse {
   message: string;
 }
+
+interface ICreateCategoryBody {
+  Name: string;
+  TagTypeId: number;
+  isHome: boolean;
+  IsTop: boolean;
+  "widget-order": number;
+}
+
+interface ICreateUserBody {
+  name: string;
+  email: string;
+  password: string;
+  phone: string;
+  is_active: boolean;
+  is_admin: boolean;
+  store_id: number;
+}
+
+interface ICreateStoreBody {
+  name: string | null;
+  address: string;
+  state: string;
+  postal_code: string;
+  owner: string;
+  phone: string;
+  email: string;
+  country: string;
+  city: string;
+  is_active: boolean;
+}
+
+interface ICreateUserResponse {
+  id: number;
+  name: string;
+  email: string;
+  phone: string;
+  is_active: boolean;
+  is_admin: boolean;
+  email_verified_at: string;
+  store_id: number;
+  created_at: string;
+  updated_at: string;
+  store: {
+    id: number;
+    name: string;
+    address: string;
+    state: string;
+    postal_code: string;
+    owner: string;
+    is_active: boolean;
+    created_at: string;
+    updated_at: string;
+  };
+}
+
+interface ICreateUserError {
+  message: string;
+  errors?: Record<string, string[]>;
+}

@@ -3,7 +3,10 @@
 import AdminPanelSearch from "@/app/(admin-panel)/components/AdminPanelSearch";
 import EditSVG from "@/components/icons/admin-panel/EditSVG";
 import useDebounce from "@/hooks/useDebounce";
-import { useGetAllUsers } from "@/services/adminPanel";
+import useToast from "@/hooks/useToast";
+import { useDeleteUser, useGetAllUsers } from "@/services/adminPanel";
+import { Trash } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 type Status = "Active" | "Inactive";
@@ -22,10 +25,12 @@ export default function UsersTable() {
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
   const perPage = 10;
+  const { push } = useRouter();
+  const toast = useToast();
 
   const debouncedSearch = useDebounce(search, 1000);
 
-  const { data, isLoading } = useGetAllUsers({
+  const { data, refetch, isLoading } = useGetAllUsers({
     page,
     per_page: perPage,
     name: debouncedSearch || undefined,
@@ -37,6 +42,20 @@ export default function UsersTable() {
   //     Active: "bg-green-100 text-green-600",
   //     Inactive: "bg-red-100 text-red-600",
   //   };
+
+  const { mutateAsync } = useDeleteUser();
+
+  const handleDelete = (id: string) => {
+    mutateAsync(id, {
+      onSuccess: () => {
+        toast.success("User deleted successfully!");
+        refetch();
+      },
+      onError: () => {
+        toast.error("Failed to delete user.");
+      },
+    });
+  };
 
   const handleStatusChange = (id: number, newStatus: Status) => {
     if (!data) return;
@@ -53,7 +72,10 @@ export default function UsersTable() {
     <div className="bg-white shadow-md rounded-xl border border-gray-100">
       <div className="flex items-center justify-between px-6 pt-6 mb-4">
         <h2 className="text-lg font-semibold text-gray-800">User List</h2>
-        <button className="bg-black text-white px-4 py-2 rounded-lg text-sm hover:bg-gray-800 transition">
+        <button
+          className="bg-black cursor-pointer text-white px-4 py-2 rounded-lg text-sm hover:bg-gray-800 transition"
+          onClick={() => push("/admin-panel/user/create-user")}
+        >
           + Add User
         </button>
       </div>
@@ -76,6 +98,7 @@ export default function UsersTable() {
               <th className="p-4 font-semibold">Role</th>
               <th className="p-4 font-semibold">Created at</th>
               <th className="p-4 font-semibold">Status</th>
+              <th className="p-4 font-semibold"></th>
               <th className="p-4 font-semibold"></th>
             </tr>
           </thead>
@@ -109,7 +132,8 @@ export default function UsersTable() {
                   >
                     {user.status}
                   </button> */}
-                  -
+                  {user.is_active ? "Active" : "Inactive"}
+
                   {openDropdown === user.id && (
                     <div className="absolute mt-1 bg-white border rounded-lg shadow z-10 w-[110px]">
                       {(["Active", "Inactive"] as Status[]).map((s) => (
@@ -125,8 +149,19 @@ export default function UsersTable() {
                   )}
                 </td>
                 <td className="py-3 px-4">
-                  <button className="p-2 rounded-lg hover:bg-gray-200">
+                  <button
+                    className="p-2 rounded-lg hover:bg-gray-200 cursor-pointer"
+                    onClick={() => push(`/admin-panel/user/${user.id}`)}
+                  >
                     <EditSVG />
+                  </button>
+                </td>
+                <td className="py-3 px-4">
+                  <button
+                    className="p-2 rounded-lg hover:bg-gray-200 cursor-pointer"
+                    onClick={() => handleDelete(String(user.id))}
+                  >
+                    <Trash />
                   </button>
                 </td>
               </tr>

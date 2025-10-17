@@ -9,9 +9,37 @@ import { useAuthRedirectPanel } from "@/hooks/usePanelAdminRedirect";
 import Image from "next/image";
 import Link from "next/link";
 import { FC, PropsWithChildren } from "react";
+import { Toaster } from "react-hot-toast";
+import { usePathname } from "next/navigation";
 
 const TransactionsLayout: FC<PropsWithChildren> = ({ children }) => {
   useAuthRedirectPanel();
+  const pathname = usePathname();
+
+  const navItems = [
+    { href: "/admin-panel", label: "Dashboard", icon: <DashBoardSVG /> },
+    {
+      href: "/admin-panel/transactions",
+      label: "Transactions",
+      icon: <TransactionSVG />,
+    },
+  ];
+
+  const managementItems = [
+    { href: "/admin-panel/product", label: "Product", icon: <ProductSVG /> },
+    {
+      href: "/admin-panel/categories",
+      label: "Category",
+      icon: <CategorySVG />,
+    },
+    { href: "/admin-panel/store", label: "Store", icon: <StoreSVG /> },
+    { href: "/admin-panel/user", label: "User", icon: <UserSVG /> },
+  ];
+
+  const linkClass = (href: string) =>
+    `px-3 py-2 rounded flex items-center gap-[0.75rem] font-semibold text-[0.875rem] hover:bg-gray-100 transition ${
+      pathname === href ? "text-[#D2B084]" : "text-[#637381]"
+    }`;
 
   return (
     <div className="flex min-h-screen bg-gray-50">
@@ -22,59 +50,35 @@ const TransactionsLayout: FC<PropsWithChildren> = ({ children }) => {
           height={37}
           alt="logo"
         />
+
         <nav className="flex flex-col space-y-2 text-gray-700">
           <h2 className="font-bold text-[#919EAB] uppercase text-[0.6875rem] mt-[1.5rem] mb-[0.5rem]">
             Overview
           </h2>
-          <Link
-            href="/admin-panel"
-            className="px-3 py-2 rounded hover:bg-gray-100 flex items-center gap-[0.75rem] font-semibold text-[0.875rem] text-[#637381]"
-          >
-            <DashBoardSVG />
-            Dashboard
-          </Link>
-          <Link
-            href="/admin-panel/transactions"
-            className="px-3 py-2 rounded hover:bg-gray-100 flex items-center gap-[0.75rem] font-semibold text-[0.875rem] text-[#637381]"
-          >
-            <TransactionSVG />
-            Transactions
-          </Link>
+          {navItems.map((item) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              className={linkClass(item.href)}
+            >
+              {item.icon}
+              {item.label}
+            </Link>
+          ))}
 
           <h2 className="mb-[0.5rem] font-bold text-[#919EAB] uppercase text-[0.6875rem] mt-[1rem]">
             Management
           </h2>
-          <Link
-            href="/admin-panel/product"
-            className="px-3 py-2 rounded hover:bg-gray-100 flex items-center gap-[0.75rem] font-semibold text-[0.875rem] text-[#637381]"
-          >
-            <ProductSVG />
-            Product
-          </Link>
-
-          <Link
-            href="/admin-panel/categories"
-            className="px-3 py-2 rounded hover:bg-gray-100 flex items-center gap-[0.75rem] font-semibold text-[0.875rem] text-[#637381]"
-          >
-            <CategorySVG />
-            Category
-          </Link>
-
-          <Link
-            href="/admin-panel/store"
-            className="px-3 py-2 rounded hover:bg-gray-100 flex items-center gap-[0.75rem] font-semibold text-[0.875rem] text-[#637381]"
-          >
-            <StoreSVG />
-            Store
-          </Link>
-
-          <Link
-            href="/admin-panel/user"
-            className="px-3 py-2 rounded hover:bg-gray-100 flex items-center gap-[0.75rem] font-semibold text-[0.875rem] text-[#637381]"
-          >
-            <UserSVG />
-            User
-          </Link>
+          {managementItems.map((item) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              className={linkClass(item.href)}
+            >
+              {item.icon}
+              {item.label}
+            </Link>
+          ))}
         </nav>
       </aside>
 
@@ -114,7 +118,10 @@ const TransactionsLayout: FC<PropsWithChildren> = ({ children }) => {
           <div className="w-8 h-8 rounded-full bg-gray-300" />
         </div>
 
-        <div>{children}</div>
+        <div>
+          {children}
+          <Toaster />
+        </div>
       </main>
     </div>
   );

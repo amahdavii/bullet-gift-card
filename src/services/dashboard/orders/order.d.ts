@@ -134,3 +134,45 @@ interface TMarkPaidResponse {
   message: string;
   order: unknown;
 }
+
+interface GetAllStoresResponse {
+  id: number;
+  name: string;
+  address: string;
+  state: string;
+  postal_code: string;
+  owner: string;
+  phone: string;
+  email: string;
+  country: string;
+  city: string;
+  is_active: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+interface ICategoryDetailResponse {
+  Id: number;
+  Name: string;
+  TagTypeId: number;
+  isHome: boolean;
+  "widget-order": number;
+  IsDeleted: number;
+  IsTop: number;
+}
+
+interface IGetStoreDetailResponse {
+  id: number;
+  name: string;
+  address: string;
+  state: string;
+  postal_code: string;
+  owner: string;
+  phone: string;
+  email: string;
+  country: string;
+  city: string;
+  is_active: boolean;
+  created_at: string;
+  updated_at: string;
+}

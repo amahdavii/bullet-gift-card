@@ -123,3 +123,13 @@ select {
   color: #525153 !important;
   font-weight: 600 !important;
 }
+
+.rmdp-calendar {
+  background: white !important;
+}
+
+.rmdp-input {
+  background: #919eab14;
+  border: 1px solid #72727214 !important;
+  padding: 20px 10px !important;
+}
