@@ -21,7 +21,7 @@ const LoginModal: FC<Props> = ({ isOpen, close }) => {
   } = useModalQuery({ modalValue: "forget" });
   const { push } = useRouter();
   const { mutateAsync } = useStoreLogin();
-  const { setToken } = useToken();
+  const { setToken } = useToken("accessToken");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 

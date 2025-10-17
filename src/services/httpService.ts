@@ -20,7 +20,7 @@ const dashboard = axios.create({
 
 dashboard.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem("panelAccessToken");
+    const token = localStorage.getItem("accessToken");
     if (token) {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       (config.headers as any).Authorization = `Bearer ${token}`;
