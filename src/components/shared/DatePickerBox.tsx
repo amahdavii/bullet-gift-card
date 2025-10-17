@@ -10,6 +10,14 @@ export default function DateQueryPicker({
   queryKey = "selectedDate",
   format = "YYYY-MM-DD",
   placeholder = "",
+  otherDateKey, // نام query برای تاریخ مقابل (start <-> end)
+  isStart = true, // آیا این datepicker start_date است؟
+}: {
+  queryKey?: string;
+  format?: string;
+  placeholder?: string;
+  otherDateKey?: string;
+  isStart?: boolean;
 }) {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -17,24 +25,36 @@ export default function DateQueryPicker({
   const initialDateString = searchParams.get(queryKey);
   const [selectedDate, setSelectedDate] = useState<DateObject | null>(
     initialDateString
-      ? new DateObject({ date: initialDateString, format: format })
+      ? new DateObject({ date: initialDateString, format })
       : null
   );
 
   const handleDateChange = (date: DateObject | null) => {
-    setSelectedDate(date);
+    if (!date) return;
 
     const current = new URLSearchParams(searchParams.toString());
-    if (date) {
-      const dateString = date.format(format);
-      current.set(queryKey, dateString);
-    } else {
-      current.delete(queryKey);
+    const dateString = date.format(format);
+
+    // محدودیت تاریخ
+    if (otherDateKey) {
+      const otherDateString = searchParams.get(otherDateKey);
+      if (otherDateString) {
+        const otherDate = new DateObject({ date: otherDateString, format });
+        if (
+          (isStart && date.toDate() > otherDate.toDate()) ||
+          (!isStart && date.toDate() < otherDate.toDate())
+        ) {
+          // اگر قوانین رعایت نشده، تاریخ مقابل را هم برابر با این تاریخ قرار بده
+          current.set(otherDateKey, dateString);
+        }
+      }
     }
+
+    current.set(queryKey, dateString);
+    setSelectedDate(date);
 
     const search = current.toString();
     const query = search ? `?${search}` : "";
-
     router.replace(`${window.location.pathname}${query}`, { scroll: false });
   };
 
@@ -46,7 +66,7 @@ export default function DateQueryPicker({
     ) {
       const newDateObject = new DateObject({
         date: dateFromQuery,
-        format: format,
+        format,
       });
       if (newDateObject.isValid) {
         setSelectedDate(newDateObject);
@@ -54,11 +74,12 @@ export default function DateQueryPicker({
     } else if (!dateFromQuery && selectedDate) {
       setSelectedDate(null);
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchParams, queryKey, format]);
 
   return (
     <div className="flex items-center gap-2.5">
-      <CalenderSVG /> {placeholder}
+      <CalenderSVG />
       <DatePicker
         calendarPosition="bottom-right"
         value={selectedDate}

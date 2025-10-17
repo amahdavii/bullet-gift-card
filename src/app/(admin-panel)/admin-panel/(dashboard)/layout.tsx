@@ -10,11 +10,12 @@ import Image from "next/image";
 import Link from "next/link";
 import { FC, PropsWithChildren } from "react";
 import { Toaster } from "react-hot-toast";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 const TransactionsLayout: FC<PropsWithChildren> = ({ children }) => {
   useAuthRedirectPanel();
   const pathname = usePathname();
+  const router = useRouter();
 
   const navItems = [
     { href: "/admin-panel", label: "Dashboard", icon: <DashBoardSVG /> },
@@ -34,6 +35,30 @@ const TransactionsLayout: FC<PropsWithChildren> = ({ children }) => {
     },
     { href: "/admin-panel/store", label: "Store", icon: <StoreSVG /> },
     { href: "/admin-panel/user", label: "User", icon: <UserSVG /> },
+    {
+      href: "#logout",
+      label: "Logout",
+      icon: (
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          strokeWidth="1.5"
+          stroke="currentColor"
+          className="w-5 h-5"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-7.5A2.25 2.25 0 003.75 5.25v13.5A2.25 2.25 0 006 21h7.5a2.25 2.25 0 002.25-2.25V15m3-6l3 3m0 0l-3 3m3-3H9"
+          />
+        </svg>
+      ),
+      onClick: () => {
+        localStorage.removeItem("panelAccessToken");
+        router.push("/admin-panel/login");
+      },
+    },
   ];
 
   const linkClass = (href: string) =>
@@ -69,16 +94,27 @@ const TransactionsLayout: FC<PropsWithChildren> = ({ children }) => {
           <h2 className="mb-[0.5rem] font-bold text-[#919EAB] uppercase text-[0.6875rem] mt-[1rem]">
             Management
           </h2>
-          {managementItems.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={linkClass(item.href)}
-            >
-              {item.icon}
-              {item.label}
-            </Link>
-          ))}
+          {managementItems.map((item) =>
+            item.href === "#logout" ? (
+              <button
+                key={item.label}
+                onClick={item.onClick}
+                className="px-3 py-2 rounded flex items-center gap-[0.75rem] font-semibold text-[#637381] hover:bg-red-100 transition text-left cursor-pointer"
+              >
+                {item.icon}
+                {item.label}
+              </button>
+            ) : (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={linkClass(item.href)}
+              >
+                {item.icon}
+                {item.label}
+              </Link>
+            )
+          )}
         </nav>
       </aside>
 

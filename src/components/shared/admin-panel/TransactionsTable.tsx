@@ -2,13 +2,13 @@
 
 import AdminPanelSearch from "@/app/(admin-panel)/components/AdminPanelSearch";
 import ArrowRightSVG from "@/components/icons/ArrowRightSVG";
-import useDebounce from "@/hooks/useDebounce";
 import { useGetAllOrders } from "@/services/adminPanel";
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useMemo } from "react";
+import { useSearchParams } from "next/navigation";
+import useDebounce from "@/hooks/useDebounce";
 
 type Status = "Completed" | "Pending" | "Canceled";
-
 type SortKey = "amount" | "date" | "fee" | null;
 type SortOrder = "asc" | "desc";
 
@@ -17,22 +17,34 @@ export default function TransactionsTable({
 }: {
   hasPagination?: boolean;
 }) {
+  const searchParams = useSearchParams();
+  const storeId = searchParams.get("storeId");
+  const startDate = searchParams.get("start_date");
+  const endDate = searchParams.get("end_date");
+
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [sortKey, setSortKey] = useState<SortKey>(null);
   const [sortOrder, setSortOrder] = useState<SortOrder>("asc");
   const [search, setSearch] = useState("");
-  const debouncedSearch = useDebounce(search, 1000);
+  const debouncedSearch = useDebounce(search, 500);
+
+  const queryParams = useMemo(
+    () => ({
+      per_page: 10,
+      page: currentPage,
+      customer_name: debouncedSearch || "",
+      ...(storeId ? { store_id: Number(storeId) } : {}),
+      ...(startDate ? { start_date: startDate } : {}),
+      ...(endDate ? { end_date: endDate } : {}),
+    }),
+    [currentPage, debouncedSearch, storeId, startDate, endDate]
+  );
 
   const {
     data: transitionData,
     isLoading,
     isError,
-  } = useGetAllOrders({
-    per_page: 10,
-    page: currentPage,
-    customer_name: debouncedSearch,
-
-  });
+  } = useGetAllOrders(queryParams);
 
   const statusColor: Record<Status, string> = {
     Completed: "bg-green-100 text-green-600",
@@ -49,16 +61,8 @@ export default function TransactionsTable({
     }
   };
 
-  if (isLoading)
-    return <div className="py-6 text-center text-gray-500">Loading...</div>;
-  if (isError)
-    return (
-      <div className="py-6 text-center text-red-500">Something went wrong</div>
-    );
-
-  const sortedData = [...transitionData.data].sort((a, b) => {
+  const sortedData = [...(transitionData?.data ?? [])].sort((a, b) => {
     if (!sortKey) return 0;
-
     let valA: number | Date = 0;
     let valB: number | Date = 0;
 
@@ -88,9 +92,16 @@ export default function TransactionsTable({
     if (currentPage > 1) setCurrentPage((prev) => prev - 1);
   };
   const handleNext = () => {
-    if (currentPage < transitionData.last_page)
+    if (currentPage < (transitionData?.last_page ?? 1))
       setCurrentPage((prev) => prev + 1);
   };
+
+  if (isLoading)
+    return <div className="py-6 text-center text-gray-500">Loading...</div>;
+  if (isError)
+    return (
+      <div className="py-6 text-center text-red-500">Something went wrong</div>
+    );
 
   return (
     <div className="bg-white shadow-md rounded-xl border border-gray-100">
@@ -105,6 +116,7 @@ export default function TransactionsTable({
           setSearchValue={setSearch}
         />
       </div>
+
       <div className="overflow-x-auto">
         <table className="min-w-full text-sm text-left">
           <thead>
@@ -133,49 +145,59 @@ export default function TransactionsTable({
             </tr>
           </thead>
           <tbody className="text-gray-700">
-            {sortedData.map((item) => (
-              <tr
-                key={item.Id}
-                className="border-b border-dashed border-[#919EAB33] hover:bg-gray-50 transition-colors"
-              >
-                <td className="py-3 px-4">{item.store?.name || "-"}</td>
-                <td className="py-3 px-4">{item.customer_name}</td>
-                <td className="py-3 px-4">${item.amount}</td>
-                <td className="py-3 px-4 text-gray-500 flex flex-col">
-                  <div>
-                    {new Date(item.CreatedAt).toLocaleDateString("en-GB", {
-                      day: "2-digit",
-                      month: "short",
-                      year: "numeric",
-                    })}
-                  </div>
-                  <div className="text-[#637381]">
-                    {new Date(item.CreatedAt).toLocaleTimeString("en-GB", {
-                      hour: "2-digit",
-                      minute: "2-digit",
-                    })}
-                  </div>
-                </td>
-                <td className="py-3 px-4">
-                  {item.eGifter_feedBack?.cost || "-"}
-                </td>
-                <td className="py-3 px-4">
-                  <span
-                    className={`px-2.5 py-1 rounded-full text-xs font-medium ${
-                      item.is_paid ? statusColor.Completed : statusColor.Pending
-                    }`}
-                  >
-                    {item.is_paid ? "Completed" : "Pending"}
-                  </span>
+            {sortedData.length === 0 ? (
+              <tr>
+                <td colSpan={6} className="py-6 text-center text-gray-500">
+                  No transactions found for the selected criteria.
                 </td>
               </tr>
-            ))}
+            ) : (
+              sortedData.map((item) => (
+                <tr
+                  key={item.Id}
+                  className="border-b border-dashed border-[#919EAB33] hover:bg-gray-50 transition-colors"
+                >
+                  <td className="py-3 px-4">{item.store?.name || "-"}</td>
+                  <td className="py-3 px-4">{item.customer_name}</td>
+                  <td className="py-3 px-4">${item.amount}</td>
+                  <td className="py-3 px-4 text-gray-500 flex flex-col">
+                    <div>
+                      {new Date(item.CreatedAt).toLocaleDateString("en-GB", {
+                        day: "2-digit",
+                        month: "short",
+                        year: "numeric",
+                      })}
+                    </div>
+                    <div className="text-[#637381]">
+                      {new Date(item.CreatedAt).toLocaleTimeString("en-GB", {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}
+                    </div>
+                  </td>
+                  <td className="py-3 px-4">
+                    {item.eGifter_feedBack?.cost || "-"}
+                  </td>
+                  <td className="py-3 px-4">
+                    <span
+                      className={`px-2.5 py-1 rounded-full text-xs font-medium ${
+                        item.is_paid
+                          ? statusColor.Completed
+                          : statusColor.Pending
+                      }`}
+                    >
+                      {item.is_paid ? "Completed" : "Pending"}
+                    </span>
+                  </td>
+                </tr>
+              ))
+            )}
           </tbody>
         </table>
       </div>
 
       {/* Pagination */}
-      {hasPagination ? (
+      {hasPagination && transitionData ? (
         <div className="flex items-center justify-end mt-4 text-sm text-gray-500 px-6 pb-6">
           <span>
             Page {transitionData.current_page} of {transitionData.last_page}
@@ -197,14 +219,14 @@ export default function TransactionsTable({
             </button>
           </div>
         </div>
-      ) : (
+      ) : !hasPagination ? (
         <Link
           href="/admin-panel/transactions"
           className="flex items-center gap-3 justify-end mt-4 text-sm text-gray-500 px-6 pb-6"
         >
           View all <ArrowRightSVG />
         </Link>
-      )}
+      ) : null}
     </div>
   );
 }
