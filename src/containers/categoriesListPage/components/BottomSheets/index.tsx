@@ -6,12 +6,14 @@ import QrCodeModal from "./QrCodeModal";
 import SelectedCardModal from "./SelectedCardModal";
 import SenderGiftModal from "./SenderGiftModal";
 import SenderInfoModal from "./SenderInfoModal";
+import TermsModal from "./TermsModal";
 
 const BottomSheetManager: FC = () => {
   const qrCodeModal = useModalQuery({ modalValue: "qr-code" });
   const selectedCardModal = useModalQuery({ modalValue: "selected-card" });
   const senderGiftModal = useModalQuery({ modalValue: "sender-gift" });
   const senderInfoModal = useModalQuery({ modalValue: "sender-info" });
+  const termsModal = useModalQuery({ modalValue: "terms" });
 
   return (
     <>
@@ -31,6 +33,8 @@ const BottomSheetManager: FC = () => {
         isOpen={senderInfoModal.isOpen}
         close={senderInfoModal.close}
       />
+
+      <TermsModal isOpen={termsModal.isOpen} close={termsModal.close} />
     </>
   );
 };

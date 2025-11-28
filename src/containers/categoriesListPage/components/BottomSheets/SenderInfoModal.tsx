@@ -1,21 +1,21 @@
+import { useState, useEffect, FC } from "react";
+import BottomSheetModal from "@/components/shared/BottomSheetModal";
+import { Button } from "@/components/ui/Button";
+import ClearableInput from "@/components/ui/ClearableInput";
+import TextField from "@/components/ui/TextField";
+import {
+  useRouter,
+  useParams,
+  useSearchParams,
+  usePathname,
+} from "next/navigation";
+import { usePostNewProductOrder } from "@/services/categoriesList";
+import { useModalQuery } from "@/hooks/useModalQuery";
 import ChevronLeftSVG from "@/components/icons/ChevronLeftSVG";
 import ChevronRightSVG from "@/components/icons/ChevronRightSVG";
 import EmailSVG from "@/components/icons/EmailSVG";
 import SmsSVG from "@/components/icons/SmsSVG";
 import WhatsappSVG from "@/components/icons/WhatsappSVG";
-import BottomSheetModal from "@/components/shared/BottomSheetModal";
-import { Button } from "@/components/ui/Button";
-import ClearableInput from "@/components/ui/ClearableInput";
-import TextField from "@/components/ui/TextField";
-import { useModalQuery } from "@/hooks/useModalQuery";
-import { usePostNewProductOrder } from "@/services/categoriesList";
-import {
-  useParams,
-  usePathname,
-  useRouter,
-  useSearchParams,
-} from "next/navigation";
-import { Dispatch, FC, SetStateAction, useEffect, useState } from "react";
 
 interface Props {
   isOpen: boolean;
@@ -38,16 +38,16 @@ const SenderInfoModal: FC<Props> = ({ isOpen, close }) => {
   const isCategoryPage = pathname.includes("/category");
 
   const { mutateAsync: mutateProduct } = usePostNewProductOrder();
-
-  const { open: openQrCode } = useModalQuery({
-    modalValue: "qr-code",
+  const { open: openQrCode } = useModalQuery({ modalValue: "qr-code" });
+  const { open: openTerms } = useModalQuery({
+    modalValue: "terms",
   });
-
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
-
   const [sendItem, setSendItem] = useState<SendItem | null>(null);
   const [recieveItem, setRecieveItem] = useState<string>("");
+
+  const [acceptedTerms, setAcceptedTerms] = useState(false);
 
   useEffect(() => {
     if (!sendItem) {
@@ -56,15 +56,12 @@ const SenderInfoModal: FC<Props> = ({ isOpen, close }) => {
   }, [sendItem]);
 
   useEffect(() => {
-    setRecieveItem("");
-  }, [sendItem]);
-
-  useEffect(() => {
     if (!isOpen) {
       setFirstName("");
       setLastName("");
       setRecieveItem("");
       setSendItem(null);
+      setAcceptedTerms(false);
     }
   }, [isOpen]);
 
@@ -77,14 +74,14 @@ const SenderInfoModal: FC<Props> = ({ isOpen, close }) => {
           id="sender"
           onChange={(event) => setFirstName(event.target.value)}
         />
-
         <TextField
           label="Sender Last Name (optional)"
           value={lastName}
-          id="sender lastname"
+          id="sender-lastname"
           onChange={(event) => setLastName(event.target.value)}
         />
       </div>
+
       <div className="mt-[6.625rem] space-y-[1rem]">
         {sendItem === "whatsapp" ? (
           <ClearableInput
@@ -163,7 +160,7 @@ const SenderInfoModal: FC<Props> = ({ isOpen, close }) => {
         </Button>
         <Button
           className="flex-1"
-          disabled={!firstName || !sendItem || !recieveItem}
+          disabled={!firstName || !sendItem || !recieveItem || !acceptedTerms}
           onClick={() => {
             mutateProduct({
               amount: Number(amount),
@@ -178,9 +175,37 @@ const SenderInfoModal: FC<Props> = ({ isOpen, close }) => {
         >
           Purchase
           <ChevronRightSVG
-            color={!firstName || !sendItem || !recieveItem ? "#979698" : "#fff"}
+            color={
+              !firstName || !sendItem || !recieveItem || !acceptedTerms
+                ? "#979698"
+                : "#fff"
+            }
           />
         </Button>
+      </div>
+
+      <div className="flex items-center gap-2 mt-5 justify-center">
+        <label className="flex items-center gap-2 cursor-pointer">
+          <input
+            className="accent-black w-5 h-5"
+            type="checkbox"
+            checked={acceptedTerms}
+            onChange={(e) => setAcceptedTerms(e.target.checked)}
+          />
+          <p className="text-[#525153] text-sm">
+            I have read and agree to the{" "}
+            <span
+              className="text-[#E0DA3E] font-semibold"
+              onClick={(e) => {
+                e.stopPropagation();
+                e.preventDefault();
+                openTerms();
+              }}
+            >
+              Purchase Terms
+            </span>
+          </p>
+        </label>
       </div>
     </BottomSheetModal>
   );

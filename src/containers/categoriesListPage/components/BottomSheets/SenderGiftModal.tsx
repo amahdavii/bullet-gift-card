@@ -16,7 +16,7 @@ import {
   useRouter,
   useSearchParams,
 } from "next/navigation";
-import { Dispatch, FC, SetStateAction, useEffect, useState } from "react";
+import { FC, useEffect, useState } from "react";
 
 interface Props {
   isOpen: boolean;
@@ -39,64 +39,58 @@ const SenderGiftModal: FC<Props> = ({ isOpen, close }) => {
   const isCategoryPage = pathname.includes("/category");
 
   const { mutateAsync: mutateProduct } = usePostNewProductOrder();
-
-  const { open: openQrCode } = useModalQuery({
-    modalValue: "qr-code",
-  });
+  const { open: openQrCode } = useModalQuery({ modalValue: "qr-code" });
+  const { open: openTerms } = useModalQuery({ modalValue: "terms" });
 
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [message, setMessage] = useState("");
-
   const [sendItem, setSendItem] = useState<SendItem | null>(null);
   const [recieveItem, setRecieveItem] = useState<string>("");
+  const [acceptedTerms, setAcceptedTerms] = useState(false);
 
+  // Reset state when modal closes
   useEffect(() => {
     if (!isOpen) {
       setFirstName("");
       setLastName("");
-      setRecieveItem("");
-      setSendItem(null);
       setMessage("");
+      setSendItem(null);
+      setRecieveItem("");
+      setAcceptedTerms(false);
     }
   }, [isOpen]);
 
   useEffect(() => {
-    if (!sendItem) {
-      setRecieveItem("");
-    }
-  }, [sendItem]);
-
-  useEffect(() => {
-    setRecieveItem("");
+    if (!sendItem) setRecieveItem("");
   }, [sendItem]);
 
   return (
     <BottomSheetModal isOpen={isOpen} onClose={close}>
+      {/* Sender Info */}
       <div className="space-y-[1.5rem]">
         <TextField
           label="Sender First Name"
           value={firstName}
           id="sender"
-          onChange={(event) => setFirstName(event.target.value)}
+          onChange={(e) => setFirstName(e.target.value)}
         />
-
         <TextField
           label="Sender Last Name (optional)"
           value={lastName}
-          id="sender lastname"
-          onChange={(event) => setLastName(event.target.value)}
+          id="sender-lastname"
+          onChange={(e) => setLastName(e.target.value)}
         />
-
         <TextAreaField
           id="message"
           label="Message (optional)"
           placeholder="Write a personal message"
           value={message}
-          onChange={(event) => setMessage(event.target.value)}
+          onChange={(e) => setMessage(e.target.value)}
         />
       </div>
 
+      {/* Receive Options */}
       <div className="mt-[2.625rem] space-y-[1rem]">
         {sendItem === "whatsapp" ? (
           <ClearableInput
@@ -113,8 +107,7 @@ const SenderGiftModal: FC<Props> = ({ isOpen, close }) => {
             disabled={!firstName}
             onClick={() => setSendItem("whatsapp")}
           >
-            <WhatsappSVG />
-            Receive By WhatsApp
+            <WhatsappSVG /> Receive By WhatsApp
           </Button>
         )}
 
@@ -133,8 +126,7 @@ const SenderGiftModal: FC<Props> = ({ isOpen, close }) => {
             disabled={!firstName}
             onClick={() => setSendItem("email")}
           >
-            <EmailSVG />
-            Receive By Email
+            <EmailSVG /> Receive By Email
           </Button>
         )}
 
@@ -153,12 +145,12 @@ const SenderGiftModal: FC<Props> = ({ isOpen, close }) => {
             disabled={!firstName}
             onClick={() => setSendItem("sms")}
           >
-            <SmsSVG />
-            Receive By SMS
+            <SmsSVG /> Receive By SMS
           </Button>
         )}
       </div>
 
+      {/* Buttons */}
       <div className="flex space-x-[0.75rem] mt-[3.5rem]">
         <Button
           variant="outline"
@@ -170,12 +162,11 @@ const SenderGiftModal: FC<Props> = ({ isOpen, close }) => {
             )
           }
         >
-          <ChevronLeftSVG />
-          Back
+          <ChevronLeftSVG /> Back
         </Button>
         <Button
           className="flex-1"
-          disabled={!firstName || !sendItem || !recieveItem}
+          disabled={!firstName || !sendItem || !recieveItem || !acceptedTerms} // چک‌باکس هم بررسی شد
           onClick={() => {
             mutateProduct({
               amount: Number(amount),
@@ -190,9 +181,38 @@ const SenderGiftModal: FC<Props> = ({ isOpen, close }) => {
         >
           Purchase
           <ChevronRightSVG
-            color={!firstName || !sendItem || !recieveItem ? "#979698" : "#fff"}
-          />{" "}
+            color={
+              !firstName || !sendItem || !recieveItem || !acceptedTerms
+                ? "#979698"
+                : "#fff"
+            }
+          />
         </Button>
+      </div>
+
+      {/* Terms Checkbox */}
+      <div className="flex items-center gap-2 mt-5 justify-center">
+        <label className="flex items-center gap-2 cursor-pointer">
+          <input
+            type="checkbox"
+            className="accent-black w-5 h-5"
+            checked={acceptedTerms}
+            onChange={(e) => setAcceptedTerms(e.target.checked)}
+          />
+          <p className="text-[#525153] text-sm">
+            I have read and agree to the{" "}
+            <span
+              className="text-[#E0DA3E] font-semibold cursor-pointer"
+              onClick={(e) => {
+                e.stopPropagation();
+                e.preventDefault(); // جلوگیری از تغییر چک‌باکس
+                openTerms(); // باز کردن modal Terms
+              }}
+            >
+              Purchase Terms
+            </span>
+          </p>
+        </label>
       </div>
     </BottomSheetModal>
   );
