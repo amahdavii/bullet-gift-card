@@ -39,9 +39,9 @@ const SenderInfoModal: FC<Props> = ({ isOpen, close }) => {
 
   const { mutateAsync: mutateProduct } = usePostNewProductOrder();
   const { open: openQrCode } = useModalQuery({ modalValue: "qr-code" });
-  const { open: openTerms } = useModalQuery({
-    modalValue: "terms",
-  });
+  // const { open: openTerms } = useModalQuery({
+  //   modalValue: "terms",
+  // });
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [sendItem, setSendItem] = useState<SendItem | null>(null);
@@ -185,7 +185,7 @@ const SenderInfoModal: FC<Props> = ({ isOpen, close }) => {
       </div>
 
       <div className="flex items-center gap-2 mt-5 justify-center">
-        <label className="flex items-center gap-2 cursor-pointer">
+        <label className="flex items-start gap-2 cursor-pointer">
           <input
             className="accent-black w-5 h-5"
             type="checkbox"
@@ -193,7 +193,7 @@ const SenderInfoModal: FC<Props> = ({ isOpen, close }) => {
             onChange={(e) => setAcceptedTerms(e.target.checked)}
           />
           <p className="text-[#525153] text-sm">
-            I have read and agree to the{" "}
+            {/* I have read and agree to the{" "}
             <span
               className="text-[#E0DA3E] font-semibold"
               onClick={(e) => {
@@ -203,7 +203,8 @@ const SenderInfoModal: FC<Props> = ({ isOpen, close }) => {
               }}
             >
               Purchase Terms
-            </span>
+            </span> */}
+            I agree to receive SMS messages for the purchased gift card.
           </p>
         </label>
       </div>

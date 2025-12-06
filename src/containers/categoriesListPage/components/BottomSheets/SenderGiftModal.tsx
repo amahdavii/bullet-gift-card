@@ -40,7 +40,7 @@ const SenderGiftModal: FC<Props> = ({ isOpen, close }) => {
 
   const { mutateAsync: mutateProduct } = usePostNewProductOrder();
   const { open: openQrCode } = useModalQuery({ modalValue: "qr-code" });
-  const { open: openTerms } = useModalQuery({ modalValue: "terms" });
+  // const { open: openTerms } = useModalQuery({ modalValue: "terms" });
 
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -200,7 +200,7 @@ const SenderGiftModal: FC<Props> = ({ isOpen, close }) => {
             onChange={(e) => setAcceptedTerms(e.target.checked)}
           />
           <p className="text-[#525153] text-sm">
-            I have read and agree to the{" "}
+            {/* I agree to re read and agree to the{" "}
             <span
               className="text-[#E0DA3E] font-semibold cursor-pointer"
               onClick={(e) => {
@@ -210,7 +210,8 @@ const SenderGiftModal: FC<Props> = ({ isOpen, close }) => {
               }}
             >
               Purchase Terms
-            </span>
+            </span> */}
+            I agree to receive SMS messages for the purchased gift card.
           </p>
         </label>
       </div>
