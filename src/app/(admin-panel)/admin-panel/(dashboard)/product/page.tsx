@@ -6,6 +6,8 @@ import { useGetAllProducts } from "@/services/adminPanel";
 import Image from "next/image";
 import { Bolt } from "lucide-react";
 import { useModalQuery } from "@/hooks/useModalQuery";
+import Select from "@/components/ui/Select";
+import { useGetAllCategoriesList } from "@/services/categoriesList";
 
 type Status = "Active" | "Draft" | "Deactivate";
 
@@ -30,7 +32,8 @@ export default function ProductTable() {
   const [page, setPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const { open: openAssign, isOpen } = useModalQuery({ modalValue: "assign" });
-
+  const { data: categoryData } = useGetAllCategoriesList();
+  const [categoryId, setCategoryId] = useState<string | undefined>(undefined);
   // کوئری گرفتن از API
   const { data, isLoading, refetch } = useGetAllProducts({
     per_page: rowsPerPage,
@@ -38,7 +41,17 @@ export default function ProductTable() {
     name: search || undefined,
     sort_by: sortKey || undefined,
     sort_order: sortOrder,
+    tag_ids: categoryId,
   });
+
+  const categoryItems = useMemo(() => {
+    if (!categoryData) return [];
+
+    return Object.entries(categoryData).map((item) => ({
+      value: String(item[1].id),
+      label: item[1].name,
+    }));
+  }, [categoryData]);
 
   useEffect(() => {
     if (!isOpen) {
@@ -76,7 +89,7 @@ export default function ProductTable() {
   return (
     <div className="bg-white shadow-md rounded-xl border border-gray-100 p-4">
       {/* Filters */}
-      <div className="flex gap-4 mb-4">
+      <div className="flex items-center gap-4 mb-4">
         <div className="py-3 px-3 w-full">
           <AdminPanelSearch
             placeholder="Search for Store"
@@ -84,6 +97,18 @@ export default function ProductTable() {
             setSearchValue={setSearch}
           />
         </div>
+        <Select
+          label="Filter By Category"
+          options={categoryItems}
+          onChange={(id) => {
+            if (typeof id === "string") {
+              setCategoryId(id);
+            } else {
+              setCategoryId(undefined);
+            }
+          }}
+          value={categoryId || ""}
+        />
       </div>
 
       {/* Info */}
