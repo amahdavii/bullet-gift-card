@@ -1,9 +1,11 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import AdminPanelSearch from "@/app/(admin-panel)/components/AdminPanelSearch";
 import { useGetAllProducts } from "@/services/adminPanel";
 import Image from "next/image";
+import { Bolt } from "lucide-react";
+import { useModalQuery } from "@/hooks/useModalQuery";
 
 type Status = "Active" | "Draft" | "Deactivate";
 
@@ -27,15 +29,22 @@ export default function ProductTable() {
   const [sortOrder, setSortOrder] = useState<SortOrder>("asc");
   const [page, setPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(5);
+  const { open: openAssign, isOpen } = useModalQuery({ modalValue: "assign" });
 
   // کوئری گرفتن از API
-  const { data, isLoading } = useGetAllProducts({
+  const { data, isLoading, refetch } = useGetAllProducts({
     per_page: rowsPerPage,
     page,
     name: search || undefined,
     sort_by: sortKey || undefined,
     sort_order: sortOrder,
   });
+
+  useEffect(() => {
+    if (!isOpen) {
+      refetch();
+    }
+  }, [isOpen, refetch]);
 
   const products: ProductTableRow[] = useMemo(() => {
     if (!data) return [];
@@ -122,12 +131,8 @@ export default function ProductTable() {
               >
                 Price {renderSortIcon("price")}
               </th>
-              <th
-                className="p-3 w-[15%] text-left cursor-pointer"
-                onClick={() => handleSort("status")}
-              >
-                Status {renderSortIcon("status")}
-              </th>
+
+              <th />
             </tr>
           </thead>
           <tbody>
@@ -164,7 +169,7 @@ export default function ProductTable() {
                 <td className="p-3">${item.price.toFixed(2)}</td>
 
                 {/* Status */}
-                <td className="p-3">
+                {/* <td className="p-3">
                   <span
                     className={`px-2 py-1 rounded-full text-xs font-medium ${
                       item.status === "Active"
@@ -176,6 +181,15 @@ export default function ProductTable() {
                   >
                     {item.status}
                   </span>
+                </td> */}
+
+                <td className="p-3 text-center">
+                  <Bolt
+                    className="cursor-pointer"
+                    onClick={() =>
+                      openAssign({ id: item.id, category: item.category })
+                    }
+                  />
                 </td>
               </tr>
             ))}

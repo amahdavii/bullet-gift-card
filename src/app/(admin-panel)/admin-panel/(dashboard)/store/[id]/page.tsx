@@ -34,6 +34,7 @@ export default function EditStorePage() {
     postal_code: "",
     country: "USA",
     is_active: true,
+    max_sale_credit: "",
   });
 
   useEffect(() => {
@@ -49,6 +50,7 @@ export default function EditStorePage() {
         postal_code: data.postal_code || "",
         country: data.country || "USA",
         is_active: !!data.is_active,
+        max_sale_credit: data.max_sale_credit || "",
       });
     }
   }, [data]);
@@ -84,6 +86,9 @@ export default function EditStorePage() {
         country: formData.country,
         city: formData.city,
         is_active: formData.is_active,
+        max_sale_credit: formData.max_sale_credit
+          ? Number(formData.max_sale_credit)
+          : null,
       });
 
       toast.success("Store updated successfully!");
@@ -178,6 +183,12 @@ export default function EditStorePage() {
             label="Country"
             id="country"
             disabled
+          />
+          <TextField
+            value={formData.max_sale_credit}
+            onChange={(e) => handleChange("max_sale_credit", e.target.value)}
+            label="max_sale_credit"
+            id="max_sale_credit"
           />
 
           <div className="flex items-center gap-3 mt-2">

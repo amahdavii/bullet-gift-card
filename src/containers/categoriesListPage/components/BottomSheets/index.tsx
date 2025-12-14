@@ -7,6 +7,7 @@ import SelectedCardModal from "./SelectedCardModal";
 import SenderGiftModal from "./SenderGiftModal";
 import SenderInfoModal from "./SenderInfoModal";
 import TermsModal from "./TermsModal";
+import AssignCategoryModal from "@/app/(admin-panel)/admin-panel/(dashboard)/product/components/Modals/AssignCategoryModal";
 
 const BottomSheetManager: FC = () => {
   const qrCodeModal = useModalQuery({ modalValue: "qr-code" });
@@ -14,6 +15,7 @@ const BottomSheetManager: FC = () => {
   const senderGiftModal = useModalQuery({ modalValue: "sender-gift" });
   const senderInfoModal = useModalQuery({ modalValue: "sender-info" });
   const termsModal = useModalQuery({ modalValue: "terms" });
+  const assignModal = useModalQuery({ modalValue: "assign" });
 
   return (
     <>
@@ -35,6 +37,11 @@ const BottomSheetManager: FC = () => {
       />
 
       <TermsModal isOpen={termsModal.isOpen} close={termsModal.close} />
+
+      <AssignCategoryModal
+        isOpen={assignModal.isOpen}
+        close={assignModal.close}
+      />
     </>
   );
 };

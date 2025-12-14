@@ -3,6 +3,21 @@ interface IStoreLoginBody {
   password: string;
 }
 
+interface ICreateProductTagBody {
+  product_id: number;
+  tag_id: number;
+  sort: number | null;
+}
+
+interface ICreateProductTagResponse {
+  Id: number;
+  ProductId: nummber;
+  TagId: number;
+  sort: number;
+  product: unknown;
+  tag: unknown;
+}
+
 interface IStoreLoginResponse {
   message: string;
   user: {
@@ -101,6 +116,7 @@ interface ICreateStoreBody {
   country: string;
   city: string;
   is_active: boolean;
+  max_sale_credit: number | null;
 }
 
 interface ICreateUserResponse {

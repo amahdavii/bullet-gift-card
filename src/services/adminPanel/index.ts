@@ -193,18 +193,17 @@ export const useCreateCategory = (): UseMutationResult<
   });
 };
 
-export const updateCategory = (body: Partial<ICreateCategoryBody>, id: string) =>
-  http3.put<unknown>(`/tags/${id}`, body).then((res) => res.data);
+export const updateCategory = (
+  body: Partial<ICreateCategoryBody>,
+  id: string
+) => http3.put<unknown>(`/tags/${id}`, body).then((res) => res.data);
 
 export const useUpdateCategory = (
   id: string
-): UseMutationResult<
-  unknown,
-  unknown,
-  Partial<ICreateCategoryBody>
-> => {
+): UseMutationResult<unknown, unknown, Partial<ICreateCategoryBody>> => {
   return useMutation({
-    mutationFn: (body: Partial<ICreateCategoryBody>) => updateCategory(body, id),
+    mutationFn: (body: Partial<ICreateCategoryBody>) =>
+      updateCategory(body, id),
   });
 };
 
@@ -367,5 +366,18 @@ export const useUpdateStore = (
 > => {
   return useMutation({
     mutationFn: (body: Partial<ICreateStoreBody>) => updateStore(body, id),
+  });
+};
+
+export const createProductTag = (body: ICreateProductTagBody) =>
+  http3.post<ICreateProductTagResponse>("/product-tags", body).then((res) => res.data);
+
+export const useCreateProductTag = (): UseMutationResult<
+  ICreateProductTagResponse,
+  unknown,
+  ICreateProductTagBody
+> => {
+  return useMutation({
+    mutationFn: createProductTag,
   });
 };

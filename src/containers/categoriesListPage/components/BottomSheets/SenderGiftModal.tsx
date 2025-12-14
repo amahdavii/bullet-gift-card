@@ -40,7 +40,7 @@ const SenderGiftModal: FC<Props> = ({ isOpen, close }) => {
 
   const { mutateAsync: mutateProduct } = usePostNewProductOrder();
   const { open: openQrCode } = useModalQuery({ modalValue: "qr-code" });
-  // const { open: openTerms } = useModalQuery({ modalValue: "terms" });
+  const { open: openTerms } = useModalQuery({ modalValue: "terms" });
 
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -200,9 +200,9 @@ const SenderGiftModal: FC<Props> = ({ isOpen, close }) => {
             onChange={(e) => setAcceptedTerms(e.target.checked)}
           />
           <p className="text-[#525153] text-sm">
-            {/* I agree to re read and agree to the{" "}
+            I agree{" "}
             <span
-              className="text-[#E0DA3E] font-semibold cursor-pointer"
+              className="text-[#E0DA3E] font-semibold cursor-pointer mx-0.5"
               onClick={(e) => {
                 e.stopPropagation();
                 e.preventDefault(); // جلوگیری از تغییر چک‌باکس
@@ -210,8 +210,8 @@ const SenderGiftModal: FC<Props> = ({ isOpen, close }) => {
               }}
             >
               Purchase Terms
-            </span> */}
-            I agree to receive SMS messages for the purchased gift card.
+            </span>{" "}
+            to receive SMS messages for the purchased gift card
           </p>
         </label>
       </div>

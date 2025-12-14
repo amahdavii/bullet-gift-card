@@ -175,4 +175,5 @@ interface IGetStoreDetailResponse {
   is_active: boolean;
   created_at: string;
   updated_at: string;
+  max_sale_credit: string;
 }
