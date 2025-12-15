@@ -116,7 +116,7 @@ interface ICreateStoreBody {
   country: string;
   city: string;
   is_active: boolean;
-  max_sale_credit: number | null;
+  max_sale_credit?: number | null;
 }
 
 interface ICreateUserResponse {
